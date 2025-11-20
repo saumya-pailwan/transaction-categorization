@@ -1,0 +1,2 @@
+// db stub
+package db
