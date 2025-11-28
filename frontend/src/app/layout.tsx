@@ -1,15 +1,22 @@
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
 import "../styles/globals.css";
-import Navbar from "../components/Navbar";
 
-export const metadata = { title: "Autonomous Transaction Categorizer" };
+const inter = Inter({ subsets: ["latin"] });
 
-export default function RootLayout({ children }) {
+export const metadata: Metadata = {
+  title: "Autonomous Transaction Agent",
+  description: "AI-powered transaction categorization",
+};
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   return (
     <html lang="en">
-      <body>
-        <Navbar />
-        <main className="container mx-auto p-6">{children}</main>
-      </body>
+      <body className={inter.className}>{children}</body>
     </html>
   );
 }
