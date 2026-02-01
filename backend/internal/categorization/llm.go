@@ -3,14 +3,13 @@ package categorization
 import (
 	"context"
 	"fmt"
-	"os"
 
 	openai "github.com/sashabaranov/go-openai"
 )
 
 func CategorizeWithLLM(tx Transaction) (string, error) {
-	apiKey := os.Getenv("OPENAI_API_KEY")
-	client := openai.NewClient(apiKey)
+	// Use shared client
+	client := LLMClient
 
 	prompt := fmt.Sprintf(`
 You are an expert accountant. Categorize the following transaction into one of these categories: 

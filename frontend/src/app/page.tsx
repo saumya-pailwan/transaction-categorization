@@ -3,15 +3,27 @@ import TransactionTable from '@/components/TransactionTable';
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center p-24 bg-gray-50">
-      <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex mb-8">
-        <h1 className="text-4xl font-bold text-gray-900">Autonomous Transaction Agent</h1>
+    <main className="dashboard-container">
+      {/* Dashboard Header */}
+      <div className="dashboard-header">
+        <div>
+          <h1 className="header-title">
+            Financial <span className="gradient-text">Agent</span>
+          </h1>
+          <p className="header-subtitle">AI-Powered Transaction Intelligence</p>
+        </div>
         <PlaidLink />
       </div>
 
-      <div className="w-full max-w-5xl">
-        <div className="bg-white shadow-md rounded-lg p-6">
-          <h2 className="text-2xl font-semibold mb-4 text-gray-800">Recent Transactions</h2>
+      {/* Main Content Grid */}
+      <div className="dashboard-content">
+        <div className="glass-panel transactions-panel">
+          <div className="panel-header">
+            <h2 className="panel-title">Recent Transactions</h2>
+            <div className="live-indicator">
+              Live Data Connection
+            </div>
+          </div>
           <TransactionTable />
         </div>
       </div>

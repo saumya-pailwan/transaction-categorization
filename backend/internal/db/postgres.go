@@ -18,6 +18,25 @@ func Connect() error {
 		return fmt.Errorf("DATABASE_URL is not set")
 	}
 
+	// Bootstrap: Create extension if not exists using a temporary connection
+	// We need to do this before creating the pool with AfterConnect,
+	// because RegisterTypes fails if the type doesn't exist.
+	tempConfig, err := pgx.ParseConfig(dbURL)
+	if err != nil {
+		return fmt.Errorf("unable to parse database URL for bootstrap: %w", err)
+	}
+	tempConn, err := pgx.ConnectConfig(context.Background(), tempConfig)
+	if err != nil {
+		// If we can't connect, maybe DB isn't up, but let the pool creation handle the error closer to standard flow
+		// or just return here.
+		return fmt.Errorf("unable to connect for bootstrap: %w", err)
+	}
+	_, err = tempConn.Exec(context.Background(), "CREATE EXTENSION IF NOT EXISTS vector")
+	tempConn.Close(context.Background())
+	if err != nil {
+		return fmt.Errorf("failed to bootstrap vector extension: %w", err)
+	}
+
 	config, err := pgxpool.ParseConfig(dbURL)
 	if err != nil {
 		return fmt.Errorf("unable to parse database URL: %w", err)

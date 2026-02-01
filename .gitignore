@@ -45,3 +45,4 @@ vendor/
 
 # Agent
 .agent/
+backend/server

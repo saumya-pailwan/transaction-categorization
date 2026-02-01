@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"autonomoustx/internal/api"
+	"autonomoustx/internal/categorization"
 	"autonomoustx/internal/db"
 	"autonomoustx/internal/plaid"
 )
@@ -28,12 +29,16 @@ func main() {
 	// 4. Setup Router
 	r := api.NewRouter()
 
-	// 5. Start Server
+	// 5. Init Categorization (Rules + LLM)
+	apiKey := os.Getenv("OPENAI_API_KEY")
+	categorization.Init(apiKey)
+
+	// 6. Start Server
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080"
 	}
-	
+
 	log.Printf("Server starting on port %s", port)
 	if err := http.ListenAndServe(":"+port, r); err != nil {
 		log.Fatalf("Server failed: %v", err)

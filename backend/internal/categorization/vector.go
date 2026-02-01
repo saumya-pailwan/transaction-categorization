@@ -3,7 +3,6 @@ package categorization
 import (
 	"context"
 	"fmt"
-	"os"
 
 	"autonomoustx/internal/db"
 
@@ -12,8 +11,8 @@ import (
 )
 
 func GenerateEmbedding(text string) (pgvector.Vector, error) {
-	apiKey := os.Getenv("OPENAI_API_KEY")
-	client := openai.NewClient(apiKey)
+	// Use shared client
+	client := LLMClient
 
 	resp, err := client.CreateEmbeddings(
 		context.Background(),
@@ -40,9 +39,9 @@ func SearchSimilar(embedding pgvector.Vector) (string, float64, bool, error) {
 	ctx := context.Background()
 
 	// Find the most similar transaction that has a category
-	// We use cosine distance (<=>) operator. 
+	// We use cosine distance (<=>) operator.
 	// Note: 1 - cosine_distance = cosine_similarity
-	
+
 	var category string
 	var distance float64
 

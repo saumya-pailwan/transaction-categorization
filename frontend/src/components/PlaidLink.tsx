@@ -10,7 +10,8 @@ const PlaidLink = () => {
   useEffect(() => {
     const createLinkToken = async () => {
       try {
-        const response = await axios.post('http://localhost:8080/api/plaid/create_link_token');
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api';
+        const response = await axios.post(`${apiUrl}/plaid/create_link_token`);
         setToken(response.data.link_token);
       } catch (error) {
         console.error('Error creating link token:', error);
@@ -21,11 +22,12 @@ const PlaidLink = () => {
 
   const onSuccess = useCallback(async (publicToken: string) => {
     try {
-      await axios.post('http://localhost:8080/api/plaid/exchange_public_token', {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api';
+      await axios.post(`${apiUrl}/plaid/exchange_public_token`, {
         public_token: publicToken,
       });
       // Trigger a refresh or notify parent
-      window.location.reload(); 
+      window.location.reload();
     } catch (error) {
       console.error('Error exchanging public token:', error);
     }
@@ -42,7 +44,7 @@ const PlaidLink = () => {
     <button
       onClick={() => open()}
       disabled={!ready}
-      className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+      className="btn-primary"
     >
       Connect Bank Account
     </button>

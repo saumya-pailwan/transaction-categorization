@@ -19,7 +19,8 @@ const TransactionTable = () => {
   useEffect(() => {
     const fetchTransactions = async () => {
       try {
-        const response = await axios.get('http://localhost:8080/api/transactions');
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api';
+        const response = await axios.get(`${apiUrl}/transactions`);
         setTransactions(response.data || []);
       } catch (error) {
         console.error('Error fetching transactions:', error);
@@ -29,35 +30,35 @@ const TransactionTable = () => {
   }, []);
 
   return (
-    <div className="overflow-x-auto">
-      <table className="min-w-full bg-white border border-gray-200">
+    <div className="table-container">
+      <table className="transactions-table">
         <thead>
-          <tr className="bg-gray-50">
-            <th className="py-2 px-4 border-b text-left">Date</th>
-            <th className="py-2 px-4 border-b text-left">Description</th>
-            <th className="py-2 px-4 border-b text-left">Merchant</th>
-            <th className="py-2 px-4 border-b text-left">Amount</th>
-            <th className="py-2 px-4 border-b text-left">Category</th>
-            <th className="py-2 px-4 border-b text-left">Status</th>
+          <tr>
+            <th>Date</th>
+            <th>Description</th>
+            <th>Merchant</th>
+            <th>Amount</th>
+            <th>Category</th>
+            <th>Status</th>
           </tr>
         </thead>
         <tbody>
           {transactions.map((tx) => (
-            <tr key={tx.id} className="hover:bg-gray-50">
-              <td className="py-2 px-4 border-b">{new Date(tx.date).toLocaleDateString()}</td>
-              <td className="py-2 px-4 border-b">{tx.description}</td>
-              <td className="py-2 px-4 border-b">{tx.merchant_name}</td>
-              <td className="py-2 px-4 border-b font-mono">${tx.amount.toFixed(2)}</td>
-              <td className="py-2 px-4 border-b">
-                <span className="inline-block bg-gray-100 rounded-full px-3 py-1 text-sm font-semibold text-gray-700">
+            <tr key={tx.id}>
+              <td>{new Date(tx.date).toLocaleDateString()}</td>
+              <td className="font-medium">{tx.description}</td>
+              <td className="text-secondary">{tx.merchant_name}</td>
+              <td className="font-mono amount">${tx.amount.toFixed(2)}</td>
+              <td>
+                <span className="badge">
                   {tx.category || 'Uncategorized'}
                 </span>
               </td>
-              <td className="py-2 px-4 border-b">
+              <td>
                 {tx.category ? (
-                  <CheckCircle className="text-green-500 w-5 h-5" />
+                  <CheckCircle className="icon-success" />
                 ) : (
-                  <AlertCircle className="text-yellow-500 w-5 h-5" />
+                  <AlertCircle className="icon-warning" />
                 )}
               </td>
             </tr>
